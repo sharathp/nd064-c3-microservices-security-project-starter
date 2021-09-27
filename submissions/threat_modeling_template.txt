@@ -1,0 +1,32 @@
+Docker Threat Modeling
+Given Docker's system components and the STRIDE framework, identify five potential threats that may arise.
+
+1. Tampering - The TLS CA certificate file is used to authenticate the Docker server based on a given CA certificate.  It must be therefore be individually owned and group owned by root to ensure less privileged users cannot tamper/modify it.
+2. Repudiation - Docker daemon runs with root privileges and therefore its activities and usage must be audited and monitored to prevent malicious usage and/or repudiation.  This could be accomplished by auditing key files and directories via audit daemon.
+3. Information Disclosure - Docker by default allows all network traffic between containers on the same host on the default network bridge.  Thus, each container has the potential of reading all packets across the container network on the same host and could lead to unwanted disclosure of information to other containers. Intercommunication should be explicitly disabled in the docker daemon configuration file.
+4. Denial of Service - By default a container can use all the resources (memory) on its host, this might lead to resource starvation/denial of service for other containers even IF a benign container/application inadvertently consume all the host's resources.  Auditing and monitoring should be implemented to ensure all containers have resource/memory limits set explicitly.
+5. Elevation of Privilege - By default, containers are not restricted from acquiring new privileges.  A malicious contain can acquire new privileges.  This could be prevented by via 'no-new-privileges' flag.
+
+
+Kubernetes Threat Modeling
+Given Kubernetes' system components and the STRIDE framework, identify five potential threats that may arise.
+
+1. Spoofing -
+2. Tampering - Kubernetes uses Etcd to persist API objects on disk, and therefore is critical to be protected from any unauthorized reads or writes. This could be achieved by setting etcd's data directory ownership to etcd:etcd.
+3. Repudiation -
+4. Information Disclosure - Connections from api-server to kubelet instances could potentially carry sensitive data such as secrets and keys. Using unencrypted communication could lead to critical information disclosure. It is thus important to use HTTPS/TLS encryption for communication between the api-server and kubelet instances.
+5. Denial of Service -
+6. Elevation of Privilege -
+
+Docker-bench Run Results and Analysis
+From the failed findings, select and document 3 findings from the Docker-bench results that you want to harden based on the 5 attack surface areas you identified in Step 1. At least 1 of the 3 hardened findings should be different from the ones mentioned in the exercise (i.e. 5.10, 5.14, and 5.22).
+
+(See the docker-bench output in suse_docker_environment_out_of_box.txt and suse_docker_environment_hardened.txt for all details)
+
+* Repudiation - 1.1.5 Ensure auditing is configured for Docker files and directories - /var/lib/docker (Automated)
+* Repudiation - 1.1.6 Ensure auditing is configured for Docker files and directories - /etc/docker (Automated)
+* Repudiation - 1.1.7 Ensure auditing is configured for Docker files and directories - docker.service (Automated)
+* Repudiation - 1.1.10 Ensure auditing is configured for Docker files and directories - /etc/default/docker (Automated)
+* Repudiation - 1.1.13 Ensure auditing is configured for Docker files and directories - /etc/sysconfig/docker (Automated)
+* Information Disclosure - 2.2 Ensure network traffic is restricted between containers on the default bridge (Automated)
+* Elevation of Privilege - 2.14 Ensure containers are restricted from acquiring new privileges (Automated)
