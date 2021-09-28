@@ -11,12 +11,12 @@ Given Docker's system components and the STRIDE framework, identify five potenti
 Kubernetes Threat Modeling
 Given Kubernetes' system components and the STRIDE framework, identify five potential threats that may arise.
 
-1. Spoofing -
+1. Spoofing - API-Server is a critical component of a kubernetes cluster, and unauthorized access to is will compromise the entire cluster.  Disabling basic authentication, disabling anonymous access to the console and removing internet access to the master/api-server,  will help prevent spoofing.
 2. Tampering - Kubernetes uses Etcd to persist API objects on disk, and therefore is critical to be protected from any unauthorized reads or writes. This could be achieved by setting etcd's data directory ownership to etcd:etcd.
-3. Repudiation -
-4. Information Disclosure - Connections from api-server to kubelet instances could potentially carry sensitive data such as secrets and keys. Using unencrypted communication could lead to critical information disclosure. It is thus important to use HTTPS/TLS encryption for communication between the api-server and kubelet instances.
-5. Denial of Service -
-6. Elevation of Privilege -
+3. Repudiation - Kubernetes is complex and malicious actors have multiple surfaces of attack, enable auditing and logs and send those to an external log aggregator and monitor those logs as a last line of defense.
+4. Information Disclosure - Etcd stores configuration for the entire kubernetes cluster including secret, data must be encrypted at rest, as theft of the disk may lead to all secrets being leaked.
+5. Denial of Service - Kubelets running on the worker nodes can be sent excessive requests resulting a denial of services. This can be mitigated by enabling node-restriction admission controller to vet all incoming requests and only allow those coming from registered nodes.
+
 
 Docker-bench Run Results and Analysis
 From the failed findings, select and document 3 findings from the Docker-bench results that you want to harden based on the 5 attack surface areas you identified in Step 1. At least 1 of the 3 hardened findings should be different from the ones mentioned in the exercise (i.e. 5.10, 5.14, and 5.22).
