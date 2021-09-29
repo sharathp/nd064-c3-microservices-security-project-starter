@@ -1,0 +1,21 @@
+Want to make your project stand out? Try the following three challenges:
+
+1. Research and remediate any vulnerabilities other than XSS in the code of vuln_app. There are 3 others documented, you will need to research how to remediate one or more of them. Call out which line(s) of code you've changed in the app.py file or any other relevant file to remediate the vulnerabilities.
+
+* Fixed SQL injection issue in "vuln_app/sqli/dao/student.py" - Student.Create method body:
+@staticmethod
+async def create(conn: Connection, name: str):
+    q = ('INSERT INTO students (name) '
+         'VALUES (%(name)s)')
+    async with conn.cursor() as cur:
+        await cur.execute(q, {'name': name})
+
+
+2. Create at least one new Falco rule in the local rule base located at /etc/falco/falco_rules.local.yaml. Take a screenshot of the custom rule. Save the screenshot as falco_custom_rule.png in the /submissions folder of the project repo.
+
+* Done - screenshot attached
+
+
+3. Test the rule you created in Step 2 by creating a payload to trigger the rule. Take a screenshot of the triggered rule in Grafana. Save the screenshot as grafana_custom_rule.png in the /submissions folder of the project repo.
+
+* Done - screenshot attached

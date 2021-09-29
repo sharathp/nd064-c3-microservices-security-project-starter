@@ -1,0 +1,10 @@
+customRules:
+  rules-traefik.yaml: |-
+    - list: nd064_programs
+      items: [rm, cp, mv]
+
+    - rule: nd064_programs_invoked
+      desc: track whenever a set of programs are invoked
+      condition: proc.name in (nd064_programs)
+      output: a tracked nd064 program opened a file (user=%user.name command=%proc.cmdline file=%fd.name)
+      priority: INFO
